@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { createJob } from '../services/JobService'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { createJob, getJob } from '../services/JobService'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const JobComponent = (job) => {
 
@@ -14,7 +14,27 @@ const JobComponent = (job) => {
     const [postDate, setPostDate]= useState('')
     const [closeDate, setCloseDate]= useState('')
 
+    const {id}=useParams();
+
     const navigator = useNavigate();
+
+    useEffect(() => {
+      if(id){
+        getJob(id).then((response) => {
+          setCompanyName(response.data.companyName);
+          setCompanyUrl(response.data.companyURL);
+          setContactEmail(response.data.contactEmail);
+          setJobRole(response.data.jobRole);
+          setJobLocation(response.data.jobLocation);
+          setJobDescription(response.data.jobDescription);
+          setPostDate(response.data.postDate);
+          setCloseDate(response.data.closeDate); 
+        }).catch(error => {
+          console.error(error);
+        })
+      }
+    }
+    )
 
     function saveJob(e) {
       e.preventDefault();
@@ -31,7 +51,12 @@ const JobComponent = (job) => {
       console.error(error);})
 
       
-    
+   function pageTitle(){
+    if(id){
+      return <h2 className='text-center'>Add Job</h2>
+    }else <h2 className='text-center'>Add Job</h2>
+
+   } 
     
 
 
@@ -40,7 +65,10 @@ const JobComponent = (job) => {
 
       <div className='row'>
         <div className='card col-md-6 offset-md-3 0ffset-md-3'>
-          <h2 className='text-center'>Add Job</h2>
+          {
+            pageTitle()
+          }
+          
           <div className='card-body'>
             <form>
               <div className='form-group mb-2'>

@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin("*")
+@CrossOrigin("*") // Change to your React app's URL
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/job_details")

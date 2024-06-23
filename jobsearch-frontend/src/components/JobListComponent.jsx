@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { JobList } from '../services/JobService'
+import { JobList, deleteJob } from '../services/JobService'
 import { useNavigate } from 'react-router-dom'
 
 const JobListComponent = () => {
@@ -9,16 +9,34 @@ const JobListComponent = () => {
   const navigator = useNavigate();
 
   useEffect(() => {
+    getAllJob();
+
+  },[])
+
+  function getAllJob(){
     JobList().then((Response)=>{
       setJob_details(Response.data);
     }).catch(error => {
       console.error(error);
     })
-
-  },[])
+  }
     
   function addNewJob() {
     navigator('/add-job')
+  }
+
+  function updateJob(id){
+    navigator('/edit-job/5{id}')
+  }
+
+  function removeJob(id){
+    console.log(id);
+
+    deleteJob(id).then((response) => {
+
+    }).catch(error =>{
+      console.error(error);
+    })
   }
 
   return (
@@ -37,6 +55,7 @@ const JobListComponent = () => {
             <th>job description</th>
             <th>post date</th>
             <th>close date</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -52,6 +71,10 @@ const JobListComponent = () => {
                 <td>{job.jobDescription}</td>
                 <td>{job.postDate}</td>
                 <td>{job.closeDate}</td>
+                <td>
+                  <button className='btn btn-info' onClick={() => updateJob(job.id)}>Update</button>
+                  <button className='btn btn-danger' onClick={() => removeJob(job.id)}>Delete</button>
+                </td>
               </tr>
             )
           }
